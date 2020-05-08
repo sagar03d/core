@@ -56,7 +56,7 @@ class JsCompiler extends RevisionCompiler
 
         $this->assetsDir->put($file, implode("\n", $output));
 
-        $mapTemp = @tempnam(storage_path('tmp'), $mapFile);
+        $mapTemp = @tempnam(sys_get_temp_dir(), $mapFile);
         $map->save($mapTemp);
         $this->assetsDir->put($mapFile, file_get_contents($mapTemp));
         @unlink($mapTemp);
