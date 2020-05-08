@@ -1,6 +1,5 @@
 import History from './utils/History';
 import Pane from './utils/Pane';
-import SearchState from './state/SearchState';
 import ReplyComposer from './components/ReplyComposer';
 import DiscussionPage from './components/DiscussionPage';
 import SignUpModal from './components/SignUpModal';
@@ -33,13 +32,6 @@ export default class ForumApplication extends Application {
     comment: CommentPost,
     discussionRenamed: DiscussionRenamedPost,
   };
-
-  /**
-   * The page's search component instance.
-   *
-   * @type {Search}
-   */
-  search;
 
   /**
    * An object which controls the state of the page's side pane.
@@ -94,8 +86,7 @@ export default class ForumApplication extends Application {
 
     this.pane = new Pane(document.getElementById('app'));
     this.composer = m.mount(document.getElementById('composer'), Composer.component());
-    this.search = new SearchState();
-    console.log(this.search);
+    this.cache.searched = [];
 
     m.route.mode = 'pathname';
     super.mount(this.forum.attribute('basePath'));
