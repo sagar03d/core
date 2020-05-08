@@ -51,7 +51,6 @@ export default class IndexPage extends Page {
       });
     }
 
-    // If we just cleared the discussion list, reset the params.
     if (!app.cache.discussionList.hasDiscussions()) {
       app.cache.discussionList.setParams(params);
       app.cache.discussionList.refresh();
