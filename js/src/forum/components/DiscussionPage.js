@@ -7,7 +7,7 @@ import LoadingIndicator from '../../common/components/LoadingIndicator';
 import SplitDropdown from '../../common/components/SplitDropdown';
 import listItems from '../../common/helpers/listItems';
 import DiscussionControls from '../utils/DiscussionControls';
-import PostStreamState from '../state/PostStreamState';
+import PostStreamState from '../states/PostStreamState';
 
 /**
  * The `DiscussionPage` component displays a whole discussion page, including
@@ -89,24 +89,6 @@ export default class DiscussionPage extends Page {
   view() {
     const discussion = this.discussion;
 
-    let content;
-
-    if (discussion) {
-      const stream = new PostStream({ state: this.stream });
-      stream.on('positionChanged', this.positionChanged.bind(this));
-      content = [
-        DiscussionHero.component({ discussion }),
-        <div className="container">
-          <nav className="DiscussionPage-nav">
-            <ul>{listItems(this.sidebarItems().toArray())}</ul>
-          </nav>
-          <div className="DiscussionPage-stream">{stream.render()}</div>
-        </div>,
-      ];
-    } else {
-      content = LoadingIndicator.component({ className: 'LoadingIndicator--block' });
-    }
-
     return (
       <div className="DiscussionPage">
         {app.cache.discussionList ? (
@@ -117,7 +99,17 @@ export default class DiscussionPage extends Page {
           ''
         )}
 
-        <div className="DiscussionPage-discussion">{content}</div>
+        <div className="DiscussionPage-discussion">{discussion ? [
+          DiscussionHero.component({ discussion }),
+          <div className="container">
+            <nav className="DiscussionPage-nav">
+              <ul>{listItems(this.sidebarItems().toArray())}</ul>
+            </nav>
+            <div className="DiscussionPage-stream">
+              {PostStream.component({state: this.state, positionHandler: this.positionChanged.bind(this)})}
+            </div>
+          </div>,
+        ] : LoadingIndicator.component({ className: 'LoadingIndicator--block' })}</div>
       </div>
     );
   }
