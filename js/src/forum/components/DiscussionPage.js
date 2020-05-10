@@ -65,7 +65,7 @@ export default class DiscussionPage extends Page {
         const near = m.route.param('near') || '1';
 
         if (near !== String(this.near)) {
-          this.streamState.goToNumber(near);
+          this.stream.goToNumber(near);
         }
 
         this.near = null;
@@ -92,7 +92,7 @@ export default class DiscussionPage extends Page {
     let content;
 
     if (discussion) {
-      const stream = new PostStream({ state: this.streamState });
+      const stream = new PostStream({ state: this.stream });
       stream.on('positionChanged', this.positionChanged.bind(this));
       content = [
         DiscussionHero.component({ discussion }),
@@ -203,8 +203,8 @@ export default class DiscussionPage extends Page {
     // Set up the post stream for this discussion, along with the first page of
     // posts we want to display. Tell the stream to scroll down and highlight
     // the specific post that was routed to.
-    this.streamState = new PostStreamState(discussion, includedPosts);
-    this.streamState.goToNumber(m.route.param('near') || (includedPosts[0] && includedPosts[0].number()), true);
+    this.stream = new PostStreamState(discussion, includedPosts);
+    this.stream.goToNumber(m.route.param('near') || (includedPosts[0] && includedPosts[0].number()), true);
   }
 
   /**
@@ -270,7 +270,7 @@ export default class DiscussionPage extends Page {
     items.add(
       'scrubber',
       PostStreamScrubber.component({
-        state: this.streamState,
+        state: this.stream,
         className: 'App-titleControl',
       }),
       -100
