@@ -7,6 +7,7 @@ import LoadingIndicator from '../../common/components/LoadingIndicator';
 import SplitDropdown from '../../common/components/SplitDropdown';
 import listItems from '../../common/helpers/listItems';
 import DiscussionControls from '../utils/DiscussionControls';
+import PostStreamState from '../state/PostStreamState';
 
 /**
  * The `DiscussionPage` component displays a whole discussion page, including
@@ -64,7 +65,7 @@ export default class DiscussionPage extends Page {
         const near = m.route.param('near') || '1';
 
         if (near !== String(this.near)) {
-          this.stream.goToNumber(near);
+          this.state.goToNumber(near);
         }
 
         this.near = null;
@@ -88,6 +89,24 @@ export default class DiscussionPage extends Page {
   view() {
     const discussion = this.discussion;
 
+    let content;
+
+    if (discussion) {
+      const stream = new PostStream({ state: this.state });
+      stream.on('positionChanged', this.positionChanged.bind(this));
+      content = [
+        DiscussionHero.component({ discussion }),
+        <div className="container">
+          <nav className="DiscussionPage-nav">
+            <ul>{listItems(this.sidebarItems().toArray())}</ul>
+          </nav>
+          <div className="DiscussionPage-stream">{stream.render()}</div>
+        </div>,
+      ];
+    } else {
+      content = LoadingIndicator.component({ className: 'LoadingIndicator--block' });
+    }
+
     return (
       <div className="DiscussionPage">
         {app.cache.discussionList ? (
@@ -98,19 +117,7 @@ export default class DiscussionPage extends Page {
           ''
         )}
 
-        <div className="DiscussionPage-discussion">
-          {discussion
-            ? [
-                DiscussionHero.component({ discussion }),
-                <div className="container">
-                  <nav className="DiscussionPage-nav">
-                    <ul>{listItems(this.sidebarItems().toArray())}</ul>
-                  </nav>
-                  <div className="DiscussionPage-stream">{this.stream.render()}</div>
-                </div>,
-              ]
-            : LoadingIndicator.component({ className: 'LoadingIndicator--block' })}
-        </div>
+        <div className="DiscussionPage-discussion">{content}</div>
       </div>
     );
   }
@@ -196,9 +203,8 @@ export default class DiscussionPage extends Page {
     // Set up the post stream for this discussion, along with the first page of
     // posts we want to display. Tell the stream to scroll down and highlight
     // the specific post that was routed to.
-    this.stream = new PostStream({ discussion, includedPosts });
-    this.stream.on('positionChanged', this.positionChanged.bind(this));
-    this.stream.goToNumber(m.route.param('near') || (includedPosts[0] && includedPosts[0].number()), true);
+    this.state = new PostStreamState(discussion, includedPosts);
+    this.state.goToNumber(m.route.param('near') || (includedPosts[0] && includedPosts[0].number()), true);
   }
 
   /**
@@ -264,7 +270,7 @@ export default class DiscussionPage extends Page {
     items.add(
       'scrubber',
       PostStreamScrubber.component({
-        stream: this.stream,
+        state: this.state,
         className: 'App-titleControl',
       }),
       -100
