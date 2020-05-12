@@ -21,6 +21,7 @@ import Post from './models/Post';
 import Group from './models/Group';
 import Notification from './models/Notification';
 import { flattenDeep } from 'lodash-es';
+import AlertManagerState from './states/AlertManagerState';
 
 /**
  * The `App` class provides a container for an application, as well as various
@@ -115,6 +116,11 @@ export default class Application {
    */
   requestError = null;
 
+  /**
+   * An object that manages the state of active alerts.
+   */
+  alerts = new AlertManagerState();
+
   data;
 
   title = '';
@@ -151,7 +157,7 @@ export default class Application {
 
   mount(basePath = '') {
     this.modal = m.mount(document.getElementById('modal'), <ModalManager />);
-    this.alerts = m.mount(document.getElementById('alerts'), <AlertManager />);
+    m.mount(document.getElementById('alerts'), <AlertManager state={this.alerts} />);
 
     this.drawer = new Drawer();
 
@@ -284,7 +290,7 @@ export default class Application {
       }
     };
 
-    if (this.requestError) this.alerts.dismiss(this.requestError.alert);
+    if (this.requestError) this.alerts.dismiss(this.requestError.alertKey);
 
     // Now make the request. If it's a failure, inspect the error that was
     // returned and show an alert containing its contents.
@@ -328,7 +334,7 @@ export default class Application {
         // the details property is decoded to transform escaped characters such as '\n'
         const formattedError = error.response && Array.isArray(error.response.errors) && error.response.errors.map((e) => decodeURI(e.detail));
 
-        error.alert = new Alert({
+        error.alertProps = {
           type: 'error',
           children,
           controls: isDebug && [
@@ -336,7 +342,7 @@ export default class Application {
               Debug
             </Button>,
           ],
-        });
+        };
 
         try {
           options.errorHandler(error);
@@ -352,7 +358,7 @@ export default class Application {
             console.groupEnd();
           }
 
-          this.alerts.show(error.alert);
+          this.alerts.show(error.alertProps);
         }
 
         deferred.reject(error);
@@ -367,8 +373,8 @@ export default class Application {
    * @param {string[]} [formattedError]
    * @private
    */
-  showDebug(error, formattedError) {
-    this.alerts.dismiss(this.requestError.alert);
+  showDebug(error) {
+    this.alerts.dismiss(this.requestError.alertKey);
 
     this.modal.show(new RequestErrorModal({ error, formattedError }));
   }
