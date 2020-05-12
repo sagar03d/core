@@ -193,6 +193,7 @@ export default class Search extends Component {
   getCurrentSearch() {
     return app.current && typeof app.current.searching === 'function' && app.current.searching();
   }
+  // THIS IS NOT CHANGED AS ITS REMOVED IN THE SEARCH PR
 
   /**
    * Navigate to the currently selected search result and close the list.
@@ -222,6 +223,7 @@ export default class Search extends Component {
       m.redraw();
     }
   }
+  // THIS IS NOT CHANGED AS ITS REMOVED IN TH SEARCH PR
 
   /**
    * Build an item list of SearchSources.

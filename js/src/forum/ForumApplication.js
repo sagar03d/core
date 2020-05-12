@@ -14,6 +14,7 @@ import routes from './routes';
 import alertEmailConfirmation from './utils/alertEmailConfirmation';
 import Application from '../common/Application';
 import Navigation from '../common/components/Navigation';
+import subclassOf from '../common/utils/subclassOf';
 
 export default class ForumApplication extends Application {
   /**
@@ -137,7 +138,7 @@ export default class ForumApplication extends Application {
    * @return {Boolean}
    */
   viewingDiscussion(discussion) {
-    return this.current instanceof DiscussionPage && this.current.discussion === discussion;
+    return subclassOf(this.current, DiscussionPage) && this.currentData.discussion === discussion;
   }
 
   /**
