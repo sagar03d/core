@@ -5,6 +5,7 @@ import Alert from '../../common/components/Alert';
 import Select from '../../common/components/Select';
 import LoadingIndicator from '../../common/components/LoadingIndicator';
 import saveSettings from '../utils/saveSettings';
+import AlertState from '../../common/states/AlertState';
 
 export default class MailPage extends Page {
   init() {
@@ -163,7 +164,7 @@ export default class MailPage extends Page {
 
     saveSettings(settings)
       .then(() => {
-        this.successAlertKey = app.alerts.show({ type: 'success', children: app.translator.trans('core.admin.basics.saved_message') });
+        this.successAlertKey = app.alerts.show(new AlertState({ type: 'success', children: app.translator.trans('core.admin.basics.saved_message') }));
       })
       .catch(() => {})
       .then(() => {
