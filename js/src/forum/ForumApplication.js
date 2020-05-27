@@ -67,12 +67,14 @@ export default class ForumApplication extends Application {
   /**
    * An object which controls the state of the app's cached discussion list
    */
-  discussionList = new DiscussionListState();
+  discussionList;
 
   constructor() {
     super();
 
     routes(this);
+
+    this.discussionList = new DiscussionListState({ forumApp: this });
 
     // Deprecated, remove in beta 15. BC layer.
     this.cache.discussionList = this.discussionList;
