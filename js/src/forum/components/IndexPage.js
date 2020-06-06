@@ -79,7 +79,9 @@ export default class IndexPage extends Page {
                 <ul className="IndexPage-toolbar-view">{listItems(this.viewItems().toArray())}</ul>
                 <ul className="IndexPage-toolbar-action">{listItems(this.actionItems().toArray())}</ul>
               </div>
-              {<DiscussionList state={app.cache.discussionList} />}
+              {app.discussionList.getComponentClass().component({
+                state: app.discussionList,
+              })}
             </div>
           </div>
         </div>
