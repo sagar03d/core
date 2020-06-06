@@ -7,7 +7,6 @@ import LoadingIndicator from '../../common/components/LoadingIndicator';
 import SplitDropdown from '../../common/components/SplitDropdown';
 import listItems from '../../common/helpers/listItems';
 import DiscussionControls from '../utils/DiscussionControls';
-import subclassOf from '../../common/utils/subclassOf';
 
 /**
  * The `DiscussionPage` component displays a whole discussion page, including
