@@ -1,4 +1,4 @@
-import Page from './Page';
+import ForumPage from './ForumPage';
 import ItemList from '../../common/utils/ItemList';
 import DiscussionHero from './DiscussionHero';
 import PostStream from './PostStream';
@@ -12,7 +12,7 @@ import DiscussionControls from '../utils/DiscussionControls';
  * The `DiscussionPage` component displays a whole discussion page, including
  * the discussion list pane, the hero, the posts, and the sidebar.
  */
-export default class DiscussionPage extends Page {
+export default class DiscussionPage extends ForumPage {
   init() {
     super.init();
 
