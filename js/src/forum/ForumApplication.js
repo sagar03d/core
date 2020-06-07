@@ -15,7 +15,6 @@ import alertEmailConfirmation from './utils/alertEmailConfirmation';
 import Application from '../common/Application';
 import Navigation from '../common/components/Navigation';
 import ComposerState from './states/ComposerState';
-import subclassOf from '../common/utils/subclassOf';
 
 export default class ForumApplication extends Application {
   /**
@@ -131,8 +130,7 @@ export default class ForumApplication extends Application {
    */
   composingReplyTo(discussion) {
     return (
-      this.composer.bodyClass &&
-      subclassOf(this.composer.bodyClass, ReplyComposer) &&
+      this.composer.bodySubclassOf(ReplyComposer) &&
       this.composer.bodyProps.discussion === discussion &&
       this.composer.position !== ComposerState.PositionEnum.HIDDEN
     );
