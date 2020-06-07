@@ -2,7 +2,6 @@ import { extend } from '../../common/extend';
 import Page from './Page';
 import ItemList from '../../common/utils/ItemList';
 import listItems from '../../common/helpers/listItems';
-import icon from '../../common/helpers/icon';
 import DiscussionList from './DiscussionList';
 import WelcomeHero from './WelcomeHero';
 import DiscussionComposer from './DiscussionComposer';
@@ -12,6 +11,7 @@ import Dropdown from '../../common/components/Dropdown';
 import Button from '../../common/components/Button';
 import LinkButton from '../../common/components/LinkButton';
 import SelectDropdown from '../../common/components/SelectDropdown';
+import Composer from '../instances/Composer';
 
 /**
  * The `IndexPage` component displays the index page, including the welcome
@@ -355,7 +355,7 @@ export default class IndexPage extends Page {
     const deferred = m.deferred();
 
     if (app.session.user) {
-      app.composer.load(DiscussionComposer, { user: app.session.user });
+      app.composer.load(new Composer(DiscussionComposer, { user: app.session.user }));
       app.composer.show();
 
       deferred.resolve(app.composer);
